@@ -1,0 +1,50 @@
+gem 'acts-as-taggable-on'
+ then run 
+ 	rake acts_as_taggable_on_engine:install:migrations
+ 	rake db:migrate
+
+
+and in your index 
+
+ 	  Tags:<%= raw article.tag_list.map { |t| link_to t, tag_path(t)}.join(',') %><br>
+
+in model 
+
+ 	  acts_as_taggable
+
+in _form add a field
+  		
+  		 <div class="field">
+    	<%= f.label :tag_list , "Tags(separate by commas"%><br>
+    	<%= f.text_field :tag_list %>
+
+in your controller
+
+		def index
+    		if params[:tag]
+      			@articles=Article.tagged_with(params[:tag])
+    		else
+    			@articles = Article.all
+    		end
+  		end
+
+  		add :tag_list in your controller_params
+
+
+ to add tag_cloud
+
+    	  	<div id="tag_cloud">
+ 				 <% tag_cloud Article.tag_counts, %w[s m l ] do |tag, css_class | %>
+  				<%= link_to tag.name, tag_path(tag.name), class: css_class %>
+  				<% end %>
+ 			</div>
+
+ 			in contoller.css.scss
+
+ 			#tag_cloud {
+					width: 400px;
+					line-height: 1.6em;
+					.s {font-size: 0.8em;}
+					.m {font-size: 1.2em;}
+					.l {font-size: 1.8em;}
+						}
